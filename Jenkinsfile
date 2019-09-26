@@ -20,6 +20,18 @@ pipeline{
                                 }
                         }
                 }
+                stage ('Run UnitTest'){
+                        steps{
+                                script{
+					if (env.BRANCH_NAME.equals('release/*') ){
+                                        if (isUnix()) {
+                                                sh 'dotnet test HelloWorldTest'
+                                        } else {
+                                                bat 'dotnet test HelloWorldTest'
+                                        }}
+                                }
+                        }
+                }
 	}
 }
 
