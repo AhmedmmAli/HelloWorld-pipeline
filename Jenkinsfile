@@ -44,6 +44,20 @@ pipeline{
                                 }
                         }
                 }
+                stage ('Run the integration test on the master branch'){
+                        steps{
+                                script{
+                                        if (env.BRANCH_NAME.equals('master') ){
+                                                if (isUnix()) {
+                                                        sh 'dotnet test HelloWorldSolutions.Tests'
+                                                } else {
+                                                        bat 'dotnet test HelloWorldSolutions.Tests'
+                                                }
+                                        }
+                                }
+                        }
+                }
+
 	}
 }
 
