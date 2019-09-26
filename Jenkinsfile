@@ -1,3 +1,9 @@
+//########################################################################################################################
+//#                                                                                                                      #
+//#   This the begining of the pipeline. i will be better to run this pipeline on ubuntu slave, and you will find        #
+//#   the output of the build saved in a file called ubuntuBuildLogs.txt                                                 #
+//#                                                                                                                      #
+//########################################################################################################################
 pipeline{
         agent any
         stages{
@@ -20,6 +26,9 @@ pipeline{
                                 }
                         }
                 }
+                  //###############################################################
+                 //          This stage to run the UnitTest                       #
+                //#################################################################
                 stage ('Run UnitTest'){
                         steps{
                                 script{
@@ -32,18 +41,23 @@ pipeline{
                                 }
                         }
                 }
+                  //###################################################################################################
+                 //                       This stage to run the dummy lint checks                                    #
+                //###################################################################################################
                 stage ('Run the lint Checks'){
                         steps{
                                 script{
 					if (env.BRANCH_NAME.equals('release/*') ){
                                         if (isUnix()) {
-                                                echo "The lint test will run here"
-                                        } else {
-                                                echo "The lint test will run here"
+                                                dotnet  add HelloWorldSolution package StyleCop.Analyzers
                                         }}
                                 }
                         }
                 }
+                  //######################################################################################
+                 //          This stage will run the integration test on the master branch              #
+                //######################################################################################
+
                 stage ('Run the integration test on the master branch'){
                         steps{
                                 script{
@@ -57,6 +71,9 @@ pipeline{
                                 }
                         }
                 }
+                  //#######################################################################################################
+                 //          This stage to compress the build output to  ubuntuBuildOutput_$BUILD_NUMBER.tar.gz           #
+                //########################################################################################################
                 stage ('Store the build output along with a build log'){
                         steps{
                                 script{
